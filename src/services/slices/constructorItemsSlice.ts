@@ -31,11 +31,36 @@ export const constructorItemsSlice = createSlice({
         const ingredient: TConstructorIngredient = { ...action.payload, id };
         state.constructorItems.ingredients.push(ingredient);
       }
+    },
+    removeIngredient: (state, action: PayloadAction<String>) => {
+      state.constructorItems.ingredients =
+        state.constructorItems.ingredients.filter(
+          (item) => item.id != action.payload
+        );
+    },
+    moveUpIngredient: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      const tempItem = state.constructorItems.ingredients[index];
+      state.constructorItems.ingredients[index] =
+        state.constructorItems.ingredients[index - 1];
+      state.constructorItems.ingredients[index - 1] = tempItem;
+    },
+    moveDownIngredient: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      const tempItem = state.constructorItems.ingredients[index];
+      state.constructorItems.ingredients[index] =
+        state.constructorItems.ingredients[index + 1];
+      state.constructorItems.ingredients[index + 1] = tempItem;
     }
   },
   selectors: { getConstructorItemsState: (state) => state }
 });
 
 export const { getConstructorItemsState } = constructorItemsSlice.selectors;
-export const { addIngredient } = constructorItemsSlice.actions;
+export const {
+  addIngredient,
+  removeIngredient,
+  moveUpIngredient,
+  moveDownIngredient
+} = constructorItemsSlice.actions;
 export default constructorItemsSlice.reducer;
