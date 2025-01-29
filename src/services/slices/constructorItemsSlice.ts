@@ -1,4 +1,10 @@
-import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
+import { orderBurgerApi } from '@api';
+import {
+  createSlice,
+  nanoid,
+  PayloadAction,
+  createAsyncThunk
+} from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
 
 export type TConstructorItemsState = {
@@ -18,6 +24,14 @@ export const initialState: TConstructorItemsState = {
   isLoading: false,
   error: null
 };
+
+export const orderBurger = createAsyncThunk(
+  'user/register',
+  async (ingredients: string[]) => {
+    const data = await orderBurgerApi(ingredients);
+    return data;
+  }
+);
 
 export const constructorItemsSlice = createSlice({
   name: 'constructorItems',
@@ -52,6 +66,20 @@ export const constructorItemsSlice = createSlice({
         state.constructorItems.ingredients[index + 1];
       state.constructorItems.ingredients[index + 1] = tempItem;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(orderBurger.pending, (state) => {
+        console.log('orderBurger.pending');
+        state.error = null;
+      })
+      .addCase(orderBurger.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.log(action.error.message);
+      })
+      .addCase(orderBurger.fulfilled, (state, action) => {
+        console.log('constructorItemsSlice.orderBurger: ', action.payload);
+      });
   },
   selectors: { getConstructorItemsState: (state) => state }
 });

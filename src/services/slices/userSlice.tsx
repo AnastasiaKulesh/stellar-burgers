@@ -7,8 +7,6 @@ import {
 } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser, TOrder } from '@utils-types';
-import { error } from 'console';
-import { act } from 'react-dom/test-utils';
 import { setCookie } from '../../utils/cookie';
 
 export type TUserState = {

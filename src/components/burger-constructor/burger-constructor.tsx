@@ -1,8 +1,9 @@
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useSelector } from '../../services/store';
+import { useSelector, useDispatch } from '../../services/store';
 import { getConstructorItemsState } from '../../services/slices/constructorItemsSlice';
+import { orderBurger } from '../../services/slices/constructorItemsSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные orderRequest и orderModalData из стора */
@@ -13,8 +14,15 @@ export const BurgerConstructor: FC = () => {
 
   const orderModalData = null;
 
+  const dispatch = useDispatch();
+
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
+    let ids = constructorItems.ingredients.map((item) => item._id);
+
+    const data = [constructorItems.bun._id, ...ids, constructorItems.bun._id];
+    console.log(data);
+    dispatch(orderBurger(data));
   };
   const closeOrderModal = () => {}; // TODO: добавить dispatch и закрытие окна
 
