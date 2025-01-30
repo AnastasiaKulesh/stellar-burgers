@@ -5,16 +5,18 @@ import {
   TRegisterData,
   getOrdersApi,
   updateUserApi,
-  logoutApi
+  logoutApi,
+  getUserApi
 } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser, TOrder } from '@utils-types';
-import { deleteCookie, setCookie } from '../../utils/cookie';
+import { deleteCookie, getCookie, setCookie } from '../../utils/cookie';
 
 export type TUserState = {
   user: TUser | null;
   error: string | null | undefined;
   isAuth: boolean;
+  authCheck: boolean;
   orders: TOrder[];
 };
 
@@ -22,8 +24,11 @@ export const initialState: TUserState = {
   user: null,
   error: null,
   isAuth: false,
+  authCheck: false,
   orders: []
 };
+
+export const userCheck = createAsyncThunk('user/userCheck', getUserApi);
 
 export const userRegister = createAsyncThunk(
   'user/register',
@@ -66,9 +71,29 @@ export const userOrders = createAsyncThunk('user/orders', async () => {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    authChecked: (state) => {
+      state.authCheck = true;
+    }
+  },
   extraReducers: (builder) => {
     builder
+      .addCase(userCheck.pending, (state) => {
+        state.isAuth = false;
+        state.user = null;
+        state.error = null;
+      })
+      .addCase(userCheck.rejected, (state, action) => {
+        state.isAuth = false;
+        state.authCheck = true;
+        state.user = null;
+        state.error = action.error.message;
+      })
+      .addCase(userCheck.fulfilled, (state, action) => {
+        state.isAuth = true;
+        state.authCheck = true;
+        state.user = action.payload.user;
+      })
       .addCase(userRegister.pending, (state) => {
         state.error = null;
       })
@@ -129,5 +154,19 @@ export const userSlice = createSlice({
   }
 });
 
+export const checkUserAuth = createAsyncThunk(
+  'user/checkUser',
+  (_, { dispatch }) => {
+    if (getCookie('accessToken')) {
+      dispatch(userCheck()).finally(() => {
+        dispatch(authChecked());
+      });
+    } else {
+      dispatch(authChecked());
+    }
+  }
+);
+
+export const { authChecked } = userSlice.actions;
 export const { getUserState } = userSlice.selectors;
 export default userSlice.reducer;
