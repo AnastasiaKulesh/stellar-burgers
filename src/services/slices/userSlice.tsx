@@ -10,14 +10,14 @@ import { TUser, TOrder } from '@utils-types';
 import { setCookie } from '../../utils/cookie';
 
 export type TUserState = {
-  user: TUser | null;
+  user: TUser;
   error: string | null | undefined;
   isAuth: boolean;
   orders: TOrder[];
 };
 
 export const initialState: TUserState = {
-  user: null,
+  user: { name: '', email: '' },
   error: null,
   isAuth: false,
   orders: []
