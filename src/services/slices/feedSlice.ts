@@ -1,10 +1,11 @@
-import { getFeedsApi } from './../../utils/burger-api';
+import { getFeedsApi, getOrderByNumberApi } from './../../utils/burger-api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { TOrdersData } from '@utils-types';
+import { TOrder, TOrdersData } from '@utils-types';
 
 export type TOrdersDataState = TOrdersData & {
   isLoading: boolean;
   error: string | null | undefined;
+  orderModalData: TOrder | null;
 };
 
 export const initialState: TOrdersDataState = {
@@ -12,13 +13,23 @@ export const initialState: TOrdersDataState = {
   total: 0,
   totalToday: 0,
   isLoading: false,
-  error: null
+  error: null,
+  orderModalData: null
 };
 
 export const fetchFeed = createAsyncThunk('feed/fetchFeed', async () => {
   const data = await getFeedsApi();
   return data;
 });
+
+export const fetchFeedById = createAsyncThunk(
+  'feed/fetchFeedById',
+  async (id: number) => {
+    const data = await getOrderByNumberApi(id);
+
+    return data;
+  }
+);
 
 export const feedDataSlice = createSlice({
   name: 'feed',
@@ -38,6 +49,19 @@ export const feedDataSlice = createSlice({
         state.orders = action.payload.orders;
         state.total = action.payload.total;
         state.totalToday = action.payload.totalToday;
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(fetchFeedById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchFeedById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(fetchFeedById.fulfilled, (state, action) => {
+        state.orderModalData = action.payload.orders[0];
         state.isLoading = false;
         state.error = null;
       });
