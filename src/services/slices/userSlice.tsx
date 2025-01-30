@@ -3,7 +3,8 @@ import {
   registerUserApi,
   TLoginData,
   TRegisterData,
-  getOrdersApi
+  getOrdersApi,
+  updateUserApi
 } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser, TOrder } from '@utils-types';
@@ -30,6 +31,8 @@ export const userRegister = createAsyncThunk(
     return data;
   }
 );
+
+export const updateUser = createAsyncThunk('user/update', updateUserApi);
 
 export const userLogin = createAsyncThunk(
   'user/login',
@@ -76,7 +79,6 @@ export const userSlice = createSlice({
         console.log(action.error.message);
       })
       .addCase(userLogin.fulfilled, (state, action) => {
-        console.log('userSlice.userLogin: ', action.payload);
         state.user = action.payload.user;
         state.isAuth = true;
       })
@@ -88,7 +90,17 @@ export const userSlice = createSlice({
       })
       .addCase(userOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
-        console.log('users orders: ', action.payload);
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.isAuth = true;
+        state.error = null;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isAuth = true;
+        state.user = action.payload.user;
       });
   },
   selectors: {
