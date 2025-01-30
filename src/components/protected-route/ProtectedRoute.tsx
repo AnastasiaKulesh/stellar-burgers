@@ -19,14 +19,9 @@ export const ProtectedRoute = ({
     return <Preloader />;
   }
 
-  if (!onlyUnAuth && !user) {
+  if (onlyUnAuth && !user) {
     // если пользователь на странице авторизации и данных в хранилище нет, то делаем редирект
     return <Navigate replace to='/login' />;
-  }
-
-  if (onlyUnAuth && user) {
-    // если пользователь на странице авторизации и данные есть в хранилище
-    return <Navigate replace to='/' />;
   }
 
   return children;

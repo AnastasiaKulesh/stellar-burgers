@@ -24,7 +24,7 @@ export const initialState: TUserState = {
   user: null,
   error: null,
   isAuth: false,
-  authCheck: false,
+  authCheck: true,
   orders: []
 };
 
@@ -56,7 +56,6 @@ export const userLogin = createAsyncThunk(
 
 export const userLogout = createAsyncThunk('user/logout', async () => {
   const data = await logoutApi();
-  console.log('logout', data);
 
   deleteCookie('accessToken');
   localStorage.clear();
@@ -118,15 +117,19 @@ export const userSlice = createSlice({
         state.isAuth = true;
       })
       .addCase(userLogout.pending, (state) => {
-        state.isAuth = true;
+        state.authCheck = false;
+        state.isAuth = false;
+        state.user = null;
       })
       .addCase(userLogout.rejected, (state, action) => {
         state.error = action.error.message;
+        state.authCheck = false;
         state.isAuth = false;
       })
       .addCase(userLogout.fulfilled, (state, action) => {
         state.user = null;
-        state.isAuth = true;
+        state.authCheck = true;
+        state.isAuth = false;
       })
       .addCase(userOrders.pending, (state) => {
         state.error = null;
