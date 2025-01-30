@@ -3,13 +3,14 @@ import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useSelector, useDispatch } from '../../services/store';
 import {
+  clearOrderData,
   getConstructorItemsState,
   getOrderModalData,
   getOrderRequestState
 } from '../../services/slices/constructorItemsSlice';
 import { orderBurger } from '../../services/slices/constructorItemsSlice';
 import { getUserState } from '../../services/slices/userSlice';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
   const userData = useSelector(getUserState);
@@ -33,7 +34,10 @@ export const BurgerConstructor: FC = () => {
       dispatch(orderBurger(data));
     }
   };
-  const closeOrderModal = () => {}; // TODO: добавить dispatch и закрытие окна
+
+  const closeOrderModal = () => {
+    dispatch(clearOrderData());
+  };
 
   const price = useMemo(
     () =>

@@ -69,7 +69,8 @@ export const constructorItemsSlice = createSlice({
       state.constructorItems.ingredients[index] =
         state.constructorItems.ingredients[index + 1];
       state.constructorItems.ingredients[index + 1] = tempItem;
-    }
+    },
+    clearOrderData: (state) => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -87,9 +88,9 @@ export const constructorItemsSlice = createSlice({
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
         console.log('constructorItemsSlice.orderBurger: ', action.payload);
-        state.constructorItems.bun = null;
-        state.constructorItems.ingredients = [];
-        state.orderRequest = false;
+        // state.constructorItems.bun = null;
+        // state.constructorItems.ingredients = [];
+        // state.orderRequest = false;
         state.orderModalData = action.payload.order;
       });
   },
@@ -109,6 +110,7 @@ export const {
   addIngredient,
   removeIngredient,
   moveUpIngredient,
-  moveDownIngredient
+  moveDownIngredient,
+  clearOrderData
 } = constructorItemsSlice.actions;
 export default constructorItemsSlice.reducer;
