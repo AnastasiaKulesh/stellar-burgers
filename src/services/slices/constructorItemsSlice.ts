@@ -5,7 +5,7 @@ import {
   PayloadAction,
   createAsyncThunk
 } from '@reduxjs/toolkit';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { TConstructorIngredient, TIngredient, TOrder } from '@utils-types';
 
 export type TConstructorItemsState = {
   constructorItems: {
@@ -14,6 +14,8 @@ export type TConstructorItemsState = {
   };
   isLoading: boolean;
   error: string | null | undefined;
+  orderRequest: boolean;
+  orderModalData: TOrder | null;
 };
 
 export const initialState: TConstructorItemsState = {
@@ -22,7 +24,9 @@ export const initialState: TConstructorItemsState = {
     ingredients: []
   },
   isLoading: false,
-  error: null
+  error: null,
+  orderRequest: false,
+  orderModalData: null
 };
 
 export const orderBurger = createAsyncThunk(
@@ -72,21 +76,35 @@ export const constructorItemsSlice = createSlice({
       .addCase(orderBurger.pending, (state) => {
         console.log('orderBurger.pending');
         state.error = null;
+        state.orderRequest = true;
+        state.orderModalData = null;
       })
       .addCase(orderBurger.rejected, (state, action) => {
         state.error = action.error.message;
         console.log(action.error.message);
+        state.orderRequest = false;
+        state.orderModalData = null;
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
         console.log('constructorItemsSlice.orderBurger: ', action.payload);
         state.constructorItems.bun = null;
         state.constructorItems.ingredients = [];
+        state.orderRequest = false;
+        state.orderModalData = action.payload.order;
       });
   },
-  selectors: { getConstructorItemsState: (state) => state }
+  selectors: {
+    getConstructorItemsState: (state) => state,
+    getOrderRequestState: (state) => state.orderRequest,
+    getOrderModalData: (state) => state.orderModalData
+  }
 });
 
-export const { getConstructorItemsState } = constructorItemsSlice.selectors;
+export const {
+  getConstructorItemsState,
+  getOrderRequestState,
+  getOrderModalData
+} = constructorItemsSlice.selectors;
 export const {
   addIngredient,
   removeIngredient,

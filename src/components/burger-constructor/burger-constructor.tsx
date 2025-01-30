@@ -2,23 +2,23 @@ import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useSelector, useDispatch } from '../../services/store';
-import { getConstructorItemsState } from '../../services/slices/constructorItemsSlice';
+import {
+  getConstructorItemsState,
+  getOrderModalData,
+  getOrderRequestState
+} from '../../services/slices/constructorItemsSlice';
 import { orderBurger } from '../../services/slices/constructorItemsSlice';
 import { getUserState } from '../../services/slices/userSlice';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные orderRequest и orderModalData из стора */
   const userData = useSelector(getUserState);
 
   const { constructorItems } = useSelector(getConstructorItemsState);
-
-  const orderRequest = false;
-
-  const orderModalData = null;
+  const orderRequest = useSelector(getOrderRequestState);
+  const orderModalData = useSelector(getOrderModalData);
 
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const onOrderClick = () => {
