@@ -7,7 +7,6 @@ import { getUserState } from '../../services/slices/userSlice';
 import { userOrders } from '../../services/slices/userSlice';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
   const { orders } = useSelector(getUserState);
   const dispatch = useDispatch();
 
