@@ -4,21 +4,22 @@ import {
   TLoginData,
   TRegisterData,
   getOrdersApi,
-  updateUserApi
+  updateUserApi,
+  logoutApi
 } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser, TOrder } from '@utils-types';
-import { setCookie } from '../../utils/cookie';
+import { deleteCookie, setCookie } from '../../utils/cookie';
 
 export type TUserState = {
-  user: TUser;
+  user: TUser | null;
   error: string | null | undefined;
   isAuth: boolean;
   orders: TOrder[];
 };
 
 export const initialState: TUserState = {
-  user: { name: '', email: '' },
+  user: null,
   error: null,
   isAuth: false,
   orders: []
@@ -47,6 +48,15 @@ export const userLogin = createAsyncThunk(
     return data;
   }
 );
+
+export const userLogout = createAsyncThunk('user/logout', async () => {
+  const data = await logoutApi();
+  console.log('logout', data);
+
+  deleteCookie('accessToken');
+  localStorage.clear();
+  return data;
+});
 
 export const userOrders = createAsyncThunk('user/orders', async () => {
   const data = await getOrdersApi();
@@ -80,6 +90,17 @@ export const userSlice = createSlice({
       })
       .addCase(userLogin.fulfilled, (state, action) => {
         state.user = action.payload.user;
+        state.isAuth = true;
+      })
+      .addCase(userLogout.pending, (state) => {
+        state.isAuth = true;
+      })
+      .addCase(userLogout.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.isAuth = false;
+      })
+      .addCase(userLogout.fulfilled, (state, action) => {
+        state.user = null;
         state.isAuth = true;
       })
       .addCase(userOrders.pending, (state) => {
