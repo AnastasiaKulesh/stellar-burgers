@@ -79,6 +79,8 @@ export const constructorItemsSlice = createSlice({
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
         console.log('constructorItemsSlice.orderBurger: ', action.payload);
+        state.constructorItems.bun = null;
+        state.constructorItems.ingredients = [];
       });
   },
   selectors: { getConstructorItemsState: (state) => state }
