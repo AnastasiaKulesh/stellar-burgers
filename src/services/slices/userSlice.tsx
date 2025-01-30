@@ -98,10 +98,6 @@ export const userSlice = createSlice({
       })
       .addCase(userRegister.rejected, (state, action) => {
         state.error = action.error.message;
-        console.log(action.error.message);
-      })
-      .addCase(userRegister.fulfilled, (state, action) => {
-        console.log('userSlice.userRegister: ', action.payload);
       })
       .addCase(userLogin.pending, (state) => {
         state.isAuth = false;
@@ -110,7 +106,6 @@ export const userSlice = createSlice({
       .addCase(userLogin.rejected, (state, action) => {
         state.error = action.error.message;
         state.isAuth = false;
-        console.log(action.error.message);
       })
       .addCase(userLogin.fulfilled, (state, action) => {
         state.user = action.payload.user;

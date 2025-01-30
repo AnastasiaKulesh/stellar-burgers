@@ -75,22 +75,16 @@ export const constructorItemsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(orderBurger.pending, (state) => {
-        console.log('orderBurger.pending');
         state.error = null;
         state.orderRequest = true;
         state.orderModalData = null;
       })
       .addCase(orderBurger.rejected, (state, action) => {
         state.error = action.error.message;
-        console.log(action.error.message);
         state.orderRequest = false;
         state.orderModalData = null;
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
-        console.log('constructorItemsSlice.orderBurger: ', action.payload);
-        // state.constructorItems.bun = null;
-        // state.constructorItems.ingredients = [];
-        // state.orderRequest = false;
         state.orderModalData = action.payload.order;
       });
   },
