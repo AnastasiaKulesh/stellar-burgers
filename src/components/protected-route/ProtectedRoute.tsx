@@ -1,7 +1,7 @@
 import { getUserState } from '../../services/slices/userSlice';
 import { useSelector } from '../..//services/store';
 import { Preloader } from '../ui/preloader/preloader';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 type ProtectedRouteProps = {
   onlyUnAuth?: boolean;
@@ -13,6 +13,7 @@ export const ProtectedRoute = ({
   children
 }: ProtectedRouteProps) => {
   const { authCheck, user } = useSelector(getUserState);
+  const location = useLocation();
 
   if (!authCheck) {
     // пока идёт чекаут пользователя, показываем прелоадер
@@ -21,7 +22,8 @@ export const ProtectedRoute = ({
 
   if (onlyUnAuth && !user) {
     // если пользователь на странице авторизации и данных в хранилище нет, то делаем редирект
-    return <Navigate replace to='/login' />;
+    const from = location.state?.from || { pathname: '/' };
+    return <Navigate replace to={from} />;
   }
 
   return children;
