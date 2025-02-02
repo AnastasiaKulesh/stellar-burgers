@@ -7,9 +7,9 @@ import {
   getConstructorItemsState,
   getOrderModalData,
   getOrderRequestState
-} from '../../services/slices/constructorItemsSlice';
-import { orderBurger } from '../../services/slices/constructorItemsSlice';
-import { getUserState } from '../../services/slices/userSlice';
+} from '../../services/slices/constructorItemsSlice/constructorItemsSlice';
+import { orderBurger } from '../../services/slices/constructorItemsSlice/constructorItemsSlice';
+import { getUserState } from '../../services/slices/userSlice/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {

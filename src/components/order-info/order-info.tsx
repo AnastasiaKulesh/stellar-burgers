@@ -3,11 +3,11 @@ import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
-import { getIngredientsState } from '../../services/slices/ingredientsSlice';
+import { getIngredientsState } from '../../services/slices/ingredientsSlice/ingredientsSlice';
 import {
   fetchFeedById,
   getFeedDataState
-} from '../../services/slices/feedSlice';
+} from '../../services/slices/feedSlice/feedSlice';
 import { useParams } from 'react-router-dom';
 
 export const OrderInfo: FC = () => {
