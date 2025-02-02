@@ -4,7 +4,10 @@ import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import { useSelector } from '../../services/store';
-import { fetchFeed, getFeedDataState } from '../../services/slices/feedSlice';
+import {
+  fetchFeed,
+  getFeedDataState
+} from '../../services/slices/feedSlice/feedSlice';
 
 export const Feed: FC = () => {
   const dispatch = useDispatch();

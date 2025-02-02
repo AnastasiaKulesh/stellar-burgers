@@ -1,4 +1,4 @@
-import { getUserState } from '../../services/slices/userSlice';
+import { getUserState } from '../../services/slices/userSlice/userSlice';
 import { useSelector } from '../..//services/store';
 import { Preloader } from '../ui/preloader/preloader';
 import { Navigate, useLocation } from 'react-router-dom';
